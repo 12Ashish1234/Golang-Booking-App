@@ -1,3 +1,3 @@
-module booking-app
+module Golang-Booking-App
 
 go 1.20
