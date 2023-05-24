@@ -64,32 +64,37 @@ func main() {
 		fmt.Println("Enter no of tickets")
 		fmt.Scan(&userTickets)
 
-		remainingTickets = remainingTickets - userTickets
-		bookings = append(bookings, firstName+" "+lastName)
+		if userTickets <= remainingTickets {
+			remainingTickets = remainingTickets - userTickets
+			bookings = append(bookings, firstName+" "+lastName)
 
-		fmt.Printf("The whole slice: %v\n", bookings)
-		fmt.Printf("The first value: %v\n", bookings[0])
-		fmt.Printf("The Array type: %T\n", bookings)
-		fmt.Printf("Array Length: %v\n", len(bookings))
+			fmt.Printf("The whole slice: %v\n", bookings)
+			fmt.Printf("The first value: %v\n", bookings[0])
+			fmt.Printf("The Array type: %T\n", bookings)
+			fmt.Printf("Array Length: %v\n", len(bookings))
 
-		fmt.Printf("Thank you %v %v for booking %v tickets. You will receive the tickets in your email address %v\n \n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets are remaining\n", remainingTickets)
+			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive the tickets in your email address %v\n \n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets are remaining\n", remainingTickets)
 
-		/*
-			Below logic is for printing only the first names instead of the whole name
-		*/
-		firstNames := []string{}
-		for _, booking := range bookings {
-			var names = strings.Fields(booking)
-			firstNames = append(firstNames, names[0])
+			/*
+				Below logic is for printing only the first names instead of the whole name
+			*/
+			firstNames := []string{}
+			for _, booking := range bookings {
+				var names = strings.Fields(booking)
+				firstNames = append(firstNames, names[0])
+			}
+
+			fmt.Printf("The first names of our bookings: %v \n \n", firstNames)
+
+			// noTicketsRemain := remainingTickets == 0
+			if remainingTickets == 0 {
+				fmt.Println("Our conference is booked out")
+				break
+			}
+		} else {
+			fmt.Printf("We only have %v tickets remaining. So you can't book %v tickets.\n \n", remainingTickets, userTickets)
 		}
 
-		fmt.Printf("The first names of our bookings: %v \n \n", firstNames)
-
-		// noTicketsRemain := remainingTickets == 0
-		if remainingTickets == 0 {
-			fmt.Println("Our conference is booked out")
-			break
-		}
 	}
 }
