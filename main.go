@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Golang-Booking-App/helper"
 	"fmt"
 	"strings"
 )
@@ -13,7 +14,7 @@ const conferenceTickets = 50
 
 func main() {
 
-	greetUsers(conferenceName, conferenceTickets, remainingTickets)
+	greetUsers()
 
 	/*
 		We can declare variables using := syntax as shown below
@@ -47,16 +48,16 @@ func main() {
 		*	checking validity of inputs using functions
 		 */
 
-		firstName, lastName, email, userTickets := userInput()
-		isValidName, isValidEmail, isValidUserTickets := checkValidity(firstName, lastName, email, userTickets, remainingTickets)
+		firstName, lastName, email, userTickets := getUserInput()
+		isValidName, isValidEmail, isValidUserTickets := helper.CheckValidity(firstName, lastName, email, userTickets, remainingTickets)
 
 		if isValidName && isValidEmail && isValidUserTickets {
 
-			bookTicket(remainingTickets, userTickets, bookings, firstName, lastName, email)
+			bookTicket(userTickets, firstName, lastName, email)
 			/*
 			*	call function print first names
 			 */
-			firstNames := getFirstNames(bookings)
+			firstNames := getFirstNames()
 			fmt.Printf("The first names of our bookings: %v \n \n", firstNames)
 
 			// noTicketsRemain := remainingTickets == 0
@@ -74,19 +75,21 @@ func main() {
 			if !isValidUserTickets {
 				fmt.Println("The tickets you have entered is invalid")
 			}
+
+			fmt.Println("Please try again!!! \n")
 		}
 
 	}
 }
 
-func greetUsers(confName string, confTickets int, remainingTickets uint) {
-	fmt.Printf("Welcome to our %v booking application\n", confName)
-	fmt.Printf("We have a total of %v tickets and %v are still available\n", confTickets, remainingTickets)
+func greetUsers() {
+	fmt.Printf("Welcome to our %v booking application\n", conferenceName)
+	fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
 	fmt.Printf("Get your tickets here to attend\n \n")
 
 }
 
-func getFirstNames(bookings []string) []string {
+func getFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
 		var names = strings.Fields(booking)
@@ -95,16 +98,16 @@ func getFirstNames(bookings []string) []string {
 	return firstNames
 }
 
-func checkValidity(firstName string, lastName string, email string, userTickets uint, remainingTickets uint) (bool, bool, bool) {
-	isValidName := len(firstName) >= 2 && len(lastName) >= 2
-	isValidEmail := strings.Contains(email, "@")
-	isValidUserTickets := userTickets > 0 && userTickets <= remainingTickets
+// func checkValidity(firstName string, lastName string, email string, userTickets uint) (bool, bool, bool) {
+// 	isValidName := len(firstName) >= 2 && len(lastName) >= 2
+// 	isValidEmail := strings.Contains(email, "@")
+// 	isValidUserTickets := userTickets > 0 && userTickets <= remainingTickets
 
-	// In GO you can return more than one value to the calling function
-	return isValidName, isValidEmail, isValidUserTickets
-}
+// 	// In GO you can return more than one value to the calling function
+// 	return isValidName, isValidEmail, isValidUserTickets
+// }
 
-func userInput() (string, string, string, uint) {
+func getUserInput() (string, string, string, uint) {
 	/*
 		Arrays and Slices
 		Slices are defined similar to arrays but only change is size definition is not given.
@@ -130,7 +133,7 @@ func userInput() (string, string, string, uint) {
 	return firstName, lastName, email, userTickets
 }
 
-func bookTicket(remainingTickets uint, userTickets uint, bookings []string, firstName string, lastName string, email string) {
+func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 	bookings = append(bookings, firstName+" "+lastName)
 
