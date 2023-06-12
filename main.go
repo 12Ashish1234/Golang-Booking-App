@@ -1,16 +1,22 @@
 package main
 
 import (
-	// "Golang-Booking-App/helper"
 	"fmt"
-	"strconv"
+	"time"
 )
 
 var conferenceName = "Go conference"
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0)
+var bookings = make([]UserData, 0)
 
 const conferenceTickets = 50
+
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 func main() {
 
@@ -54,6 +60,7 @@ func main() {
 		if isValidName && isValidEmail && isValidUserTickets {
 
 			bookTicket(userTickets, firstName, lastName, email)
+			go sendTicket(userTickets, firstName, lastName, email)
 			/*
 			*	call function print first names
 			 */
@@ -92,8 +99,15 @@ func greetUsers() {
 func getFirstNames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings {
+		// below method is for getting firstNames from normal strings
 		// var names = strings.Fields(booking)
-		firstNames = append(firstNames, booking["firstName"])
+
+		// below method is for getting firstNames from maps
+		// firstNames = append(firstNames, booking["firstName"])
+
+		//below method is for getting firstNames from structs
+
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -137,13 +151,23 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 	remainingTickets = remainingTickets - userTickets
 
 	// create map for a user
-	var userData = make(map[string]string)
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	// var userData = make(map[string]string)
+
+	// create struct for userdata
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
+
+	// userData["firstName"] = firstName
+	// userData["lastName"] = lastName
+	// userData["email"] = email
+	// userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
 
 	bookings = append(bookings, userData)
+	fmt.Printf("List of Bookings is %v\n", bookings)
 
 	// fmt.Printf("The whole slice: %v\n", bookings)
 	// fmt.Printf("The first value: %v\n", bookings[0])
@@ -152,4 +176,13 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive the tickets in your email address %v\n \n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets are remaining\n", remainingTickets)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(5 * time.Second)
+	var ticket = fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("###############")
+	fmt.Printf("Sending ticket:\n %v \nto email address %v\n", ticket, email)
+	fmt.Println("###############")
+
 }
